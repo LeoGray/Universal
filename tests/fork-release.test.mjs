@@ -24,9 +24,9 @@ test('unmodified runtime bundles match checksummed upstream releases',async()=>{
   const data=await readFile(`dist/${name}`);assert.equal(createHash('sha256').update(data).digest('hex'),upstream.assets[name]);
  }
 });
-test('compiled Manifest preserves official Chinese and only adds missing Chinese on Mac', {timeout:10000}, async()=>{
+test('compiled Manifest preserves official Chinese and only adds missing Chinese on Mac and tvOS', {timeout:10000}, async()=>{
  const source=await readFile('dist/Manifest.response.bundle.js','utf8');
- for(const chinese of ['', 'zh-Hans', 'zh-Hant']) {
+ for(const device of ['Macintosh','AppleTV','Apple TV']) for(const chinese of ['', 'zh-Hans', 'zh-Hant']) {
   const english='#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",LANGUAGE="en",NAME="English",FORCED=NO,STABLE-RENDITION-ID="english",URI="en.m3u8"';
   const official=chinese ? `#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",LANGUAGE="${chinese}",NAME="Chinese",FORCED=NO,URI="zh.m3u8"` : '';
   const body=['#EXTM3U',english,official,'#EXT-X-STREAM-INF:BANDWIDTH=1000000,SUBTITLES="subs"','video.m3u8'].filter(Boolean).join('\n');
@@ -35,7 +35,7 @@ test('compiled Manifest preserves official Chinese and only adds missing Chinese
    $environment:{'surge-version':'test'},$script:{startTime:Date.now()/1000},
    $argument:{LogLevel:'OFF',Storage:'Argument',Languages:['EN','ZH'],Types:['Official','Translate']},
    $persistentStore:{read:()=>null,write:()=>true},
-   $request:{url:'https://hls.itunes.apple.com/WebObjects/MZPlay.woa/hls/subscription/playlist.m3u8',headers:{'User-Agent':'AppleCoreMedia Macintosh'}},
+   $request:{url:'https://hls.itunes.apple.com/WebObjects/MZPlay.woa/hls/subscription/playlist.m3u8',headers:{'User-Agent':`AppleCoreMedia ${device}`}},
    $response:{status:200,headers:{'Content-Type':'application/vnd.apple.mpegurl'},body},$done:resolve,
   }));
   assert(result.body.includes(english));

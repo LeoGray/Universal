@@ -82,9 +82,9 @@ export default function setOption(playlist1 = {}, playlist2 = {}, type = "", pla
 	//newOption.OPTION.CHARACTERISTICS += `${separator ?? ""}DualSubs.${type}`;
 	// 增加副语言
 	newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE2;
-	// Mac AVKit can collapse a translated track that keeps the source rendition ID.
-	// Keep the on-device verified change scoped to Apple/Mac Chinese translation.
-	if (platform === "Apple" && device === "Macintosh" && type === "Translate" && /^(zh|cmn|zho|chi|yue)(-|$)/i.test(LANGUAGE2)) {
+	// Apple AVKit needs a Chinese language label and a distinct translated rendition ID.
+	// Apply the Mac compatibility fix to native Apple TV playback too.
+	if (platform === "Apple" && ["Macintosh", "AppleTV"].includes(device) && type === "Translate" && /^(zh|cmn|zho|chi|yue)(-|$)/i.test(LANGUAGE2)) {
 		newOption.OPTION.LANGUAGE = /hant|tw|hk|yue/i.test(LANGUAGE2) ? "zh-Hant" : "zh-Hans";
 		newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE1;
 		if (newOption.OPTION["STABLE-RENDITION-ID"]) {

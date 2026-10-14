@@ -18,9 +18,9 @@ for(const lang of ['zh-Hans','zh-Hant','zh-TW','zh-HK','cmn-Hans','yue-Hant']) {
   });
  }
 }
-test('English-only Mac playlist gets a distinct selectable Chinese translation without changing original',()=>{
+for (const device of ['Macintosh','AppleTV']) test(`English-only ${device} playlist gets a distinct selectable Chinese translation without changing original`,()=>{
  const original=track('en'),file=[original],expected=structuredClone(original);
- apply(file);
+ apply(file,device);
  assert.equal(file.length,2);assert.deepEqual(original,expected);
  const generated=file[1].OPTION;
  assert.equal(generated.LANGUAGE,'zh-Hans');assert.equal(generated['ASSOC-LANGUAGE'],'en');
@@ -43,7 +43,7 @@ test('official Chinese on one pathway does not hide translation on a pathway wit
  assert.equal(out.find(x=>x.OPTION.URI.includes('subtype=')).OPTION['GROUP-ID'],'subs-fa');
 });
 test('mobile track labeling stays upstream-compatible when Chinese is absent',()=>{
- for(const device of ['iPhone','AppleTV'])assert.equal(apply([track('en')],device)[1].OPTION.LANGUAGE,'dualsubs-translate');
+ for(const device of ['iPhone'])assert.equal(apply([track('en')],device)[1].OPTION.LANGUAGE,'dualsubs-translate');
 });
 test('non-Apple official/translation choices remain enabled',()=>assert.equal(apply([track('en'),track('zh-Hans')],'Macintosh','Disney+').length,4));
 test('non-Chinese translation is not mislabeled as Chinese',()=>{
