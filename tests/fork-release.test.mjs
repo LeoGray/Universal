@@ -43,3 +43,11 @@ test('compiled Manifest preserves official Chinese and only adds missing Chinese
   else {assert.match(result.body,/LANGUAGE="zh-Hans"/);assert.match(result.body,/english-dualsubs-translate/);assert.match(result.body,/subtype=Translate/);}
  }
 });
+test('only the two Apple translation response scripts get a 30-second budget',async()=>{
+ const module=await readFile('dist/DualSubs.Universal.sgmodule','utf8');
+ const lines=module.split('\n').filter(l=>l.includes('type=http-response'));
+ const apple=lines.filter(l=>/^🍿️ DualSubs\.TV\+?\.Translate\.Subtitles\.response =/.test(l));
+ assert.equal(apple.length,2);
+ for(const line of apple)assert.match(line,/, timeout=30,/);
+ for(const line of lines.filter(l=>!apple.includes(l)))assert.doesNotMatch(line,/, timeout=30,/);
+});

@@ -16,6 +16,16 @@ for(const [name,sha256] of Object.entries(upstream.assets)) {
  // Keep code/metadata intact, changing only same-project release URLs to this fork.
  let text=bytes.toString('utf8').replaceAll(`${upstream.baseURL}/`,prefix);
  if(name==='DualSubs.Universal.sgmodule')text=text.replace(/^#!name = .*$/m,'#!name = 🍿️ DualSubs: 🔣 Universal · LeoGray').replace(/^#!version = .*$/m,`#!version = ${pkg.version}`).replace(/^#!arguments = (.*)$/m,(_,args)=>`#!arguments = ${args.replace('Storage:"PersistentStore"','Storage:"Argument"')}`);
+ if(name==='DualSubs.Universal.sgmodule') {
+  let count=0;
+  text=text.split('\n').map(line=>{
+   if(!/^🍿️ DualSubs\.TV\+?\.Translate\.Subtitles\.response =/.test(line))return line;
+   if(!line.includes(', requires-body=1,') || /(?:^|, )timeout=/.test(line))throw new Error('Unexpected Apple translation declaration');
+   count++;
+   return line.replace(', requires-body=1,',', requires-body=1, timeout=30,');
+  }).join('\n');
+  if(count!==2)throw new Error(`Expected two Apple translation scripts, found ${count}`);
+ }
  await writeFile(`dist/${name}`,text);
 }
 execFileSync('node',['node_modules/rollup/dist/bin/rollup','-c','rollup.fork.config.mjs'],{stdio:'inherit'});

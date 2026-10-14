@@ -1,3 +1,5 @@
+Release 1.8.1-leogray.2: raise Surge Apple TV/TV+ translation script timeout from the implicit 5 seconds to 30 seconds. Other scripts, routing and official-Chinese-first behavior are unchanged. This allows retries more time; it does not guarantee Google availability.
+
 This fork adds official-Chinese-first behavior for Apple TV playback and the Mac Chinese subtitle selection fix.
 
 - Full official Simplified/Traditional Chinese tracks are preserved without synthetic Chinese options in the same subtitle group. Forced-only Chinese does not suppress full translation. Embedded Chinese CC is recognized when linked by a variant.
