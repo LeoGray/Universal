@@ -22,6 +22,12 @@ Console.info(`FORMAT: ${FORMAT}`);
 // 获取平台
 const PLATFORM = detectPlatform($request.url);
 Console.info(`PLATFORM: ${PLATFORM}`);
+// Compact Apple diagnostics: no stream URL, token, subtitle text or raw headers.
+const appleDiagnostic = { format: FORMAT ?? "missing", stage: "entered" };
+const reportAppleDiagnostic = () => {
+ if (PLATFORM === "Apple") console.log(`[DualSubs Apple diagnostic] ${JSON.stringify(appleDiagnostic)}`);
+};
+reportAppleDiagnostic();
 (async () => {
 	/**
 	 * 设置
@@ -37,6 +43,7 @@ Console.info(`PLATFORM: ${PLATFORM}`);
 	Console.info(`Type: ${Type}`, `Languages: ${Languages}`);
 	// 兼容性判断
 	const { standard: STANDARD, device: DEVICE } = isStandard(url, $request.headers, PLATFORM);
+ Object.assign(appleDiagnostic, {device: DEVICE, languages: Languages, types: Settings.Types, stage: "format-check"});
 	// 创建空数据
 	let body = {};
 	// 格式判断
@@ -56,16 +63,24 @@ Console.info(`PLATFORM: ${PLATFORM}`);
 			body = M3U8.parse($response.body);
 			//Console.debug(`M3U8.parse($response.body): ${JSON.stringify(body)}`);
 			// 获取播放列表类型
-			switch (detectPlaylist(body)) {
+			appleDiagnostic.playlist = detectPlaylist(body);
+ switch (appleDiagnostic.playlist) {
 				case "Multivariant Playlist": {
 					// 读取已存数据
 					const playlistCache = Caches.Playlists.Master.get($request.url) || {};
 					// 获取特定语言的字幕
 					playlistCache[Languages[0]] = attrList.get($request.url, body, "SUBTITLES", Configs.Languages[Languages[0]]);
 					playlistCache[Languages[1]] = attrList.get($request.url, body, "SUBTITLES", Configs.Languages[Languages[1]]);
-					// 写入选项
+					Object.assign(appleDiagnostic, {
+      sourceTracks: playlistCache[Languages[0]].length,
+      targetTracks: playlistCache[Languages[1]].length,
+      subtitleLanguages: [...new Set(body.filter(x => x.TAG === "#EXT-X-MEDIA" && x.OPTION?.TYPE === "SUBTITLES").map(x => x.OPTION.LANGUAGE))],
+     });
+     const beforeTrackCount = body.filter(x => x.TAG === "#EXT-X-MEDIA").length;
+     // 写入选项
 					body = attrList.set(body, playlistCache, Settings.Types, Languages, STANDARD, DEVICE);
-					// 写入数据
+					Object.assign(appleDiagnostic, {stage: "master-rewritten", addedTracks: body.filter(x => x.TAG === "#EXT-X-MEDIA").length - beforeTrackCount});
+     // 写入数据
 					Caches.Playlists.Master.set($request.url, playlistCache);
 					// 格式化缓存
 					Caches.Playlists.Master = setCache(Caches.Playlists.Master, Settings.CacheSize);
@@ -172,8 +187,8 @@ Console.info(`PLATFORM: ${PLATFORM}`);
 			break;
 	}
 })()
-	.catch(e => Console.error(e))
-	.finally(() => done($response));
+	.catch(e => { appleDiagnostic.stage = "error"; appleDiagnostic.errorType = e?.name ?? "Error"; Console.error(e); })
+ .finally(() => { reportAppleDiagnostic(); done($response); });
 
 /***************** Function *****************/
 /**

@@ -30,14 +30,20 @@ test('compiled Manifest preserves official Chinese and only adds missing Chinese
   const english='#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",LANGUAGE="en",NAME="English",FORCED=NO,STABLE-RENDITION-ID="english",URI="en.m3u8"';
   const official=chinese ? `#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",LANGUAGE="${chinese}",NAME="Chinese",FORCED=NO,URI="zh.m3u8"` : '';
   const body=['#EXTM3U',english,official,'#EXT-X-STREAM-INF:BANDWIDTH=1000000,SUBTITLES="subs"','video.m3u8'].filter(Boolean).join('\n');
+  const logs=[];
   const result=await new Promise(resolve=>vm.runInNewContext(source,{
-   console:{log(){},warn(){},error(){}},
+   console:{log(...args){logs.push(args.join(" "));},warn(){},error(){}},
    $environment:{'surge-version':'test'},$script:{startTime:Date.now()/1000},
    $argument:{LogLevel:'OFF',Storage:'Argument',Languages:['EN','ZH'],Types:['Official','Translate']},
    $persistentStore:{read:()=>null,write:()=>true},
    $request:{url:'https://hls.itunes.apple.com/WebObjects/MZPlay.woa/hls/subscription/playlist.m3u8',headers:{'User-Agent':`AppleCoreMedia ${device}`}},
    $response:{status:200,headers:{'Content-Type':'application/vnd.apple.mpegurl'},body},$done:resolve,
   }));
+  const diagnostics=logs.filter(x=>x.startsWith('[DualSubs Apple diagnostic] ')).map(x=>JSON.parse(x.slice('[DualSubs Apple diagnostic] '.length)));
+  assert.equal(diagnostics[0].stage,'entered');
+  assert.equal(diagnostics.at(-1).stage,'master-rewritten');
+  assert.equal(diagnostics.at(-1).addedTracks,chinese ? 0 : 1);
+  assert(!JSON.stringify(diagnostics).includes('https://'));
   assert(result.body.includes(english));
   if(chinese){assert(result.body.includes(official));assert(!result.body.includes('subtype=Translate'));}
   else {assert.match(result.body,/LANGUAGE="zh-Hans"/);assert.match(result.body,/english-dualsubs-translate/);assert.match(result.body,/subtype=Translate/);}

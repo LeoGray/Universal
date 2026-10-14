@@ -6,7 +6,7 @@ export default {
  input: './src/Manifest.response.js',
  output: {
   file: './dist/Manifest.response.bundle.js', format: 'es',
-  banner: `console.log(${JSON.stringify(`DualSubs LeoGray ${pkg.version}: official Chinese first; Mac rendition fix`)});`,
+  banner: `console.log(${JSON.stringify(`DualSubs LeoGray ${pkg.version}: official Chinese first; Mac/tvOS rendition fix; Apple diagnostics`)});`,
  },
  plugins: [nodeResolve(),commonjs(),terser()],
 };

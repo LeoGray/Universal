@@ -1,4 +1,4 @@
-Release 1.8.1-leogray.3: extend the Chinese subtitle language label and distinct rendition ID fix to Apple TV hardware. Preserve official Chinese tracks and the 30-second Apple translation timeout.
+Release 1.8.1-leogray.4: add compact Apple manifest diagnostics to identify why tvOS subtitle options are absent. Logs show entry, detected device, content type, subtitle languages, source/target counts and added tracks, without URLs, tokens or subtitle text. Playback logic is unchanged from .3; this is a diagnostic release, not a confirmed playback fix.
 
 This fork adds official-Chinese-first behavior for Apple TV playback and the Mac/tvOS Chinese subtitle selection fix.
 
