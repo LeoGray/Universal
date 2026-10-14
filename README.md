@@ -1,3 +1,28 @@
+# LeoGray Apple TV subtitle fork
+
+Based on DualSubs Universal v1.8.1 (Apache-2.0). This is an independent fork, not an official DualSubs release.
+
+**Install in Surge:** `https://github.com/LeoGray/Universal/releases/latest/download/DualSubs.Universal.sgmodule`
+
+Disable the original Universal module before enabling this fork. Keep iRingo TV and certificate setup. The same URL can be installed on Mac/iOS/tvOS; only Mac playback of the rendition fix has been verified. No local file paths are required.
+
+Apple TV: preserve full official Simplified or Traditional Chinese subtitles. Add machine translation only to groups without official Chinese. Forced-only Chinese does not count as a full track. Select official Simplified Chinese first, or official Traditional Chinese if Simplified is absent; the fork does not change your player selection automatically. On Mac, generated Chinese translation uses a distinct rendition ID and a Chinese language label. Other platforms retain upstream labeling.
+
+## Build and maintain
+
+```sh
+git submodule update --init src/EXTM3U src/WebVTT src/LRC
+npm ci --ignore-scripts
+npm run build:fork
+npm run test:fork
+```
+
+The fork build compiles the changed Manifest from source and checksums unchanged upstream release assets using `upstream-release.json`. The upstream protobuf submodule is not publicly accessible, so rebuilding every upstream bundle is currently unavailable. See [release notes](FORK-RELEASE.md).
+
+Update deliberately: merge upstream changes, update the pinned release assets/checksums if needed, increment `package.json` version, run tests, then tag `v<version>` (for example `v1.8.1-leogray.1`). The fork workflow validates and publishes assets to this repository only. No scheduled upstream overwrite is configured. Existing installations update from this fork, not the official module.
+
+---
+
 # 🍿️ DualSubs: 🔣 Universal
 
 ## 本地设置

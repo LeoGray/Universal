@@ -1,7 +1,7 @@
 {
 	"name": "@dualsubs/universal",
 	"organizationName": "🍿️ DualSubs",
-	"displayName": "🍿️ DualSubs: 🔣 Universal",
+	"displayName": "🍿️ DualSubs: 🔣 Universal · LeoGray",
 	"description": "流媒体平台字幕增强及双语模块\n如需恢复TV完整支持\n请配合“ iRingo: 📺 TV”使用",
 	"homepage": "https://DualSubs.github.io/guide/universal",
 	"openUrl": "https://dualsubs.github.io/settings/",
@@ -21,7 +21,7 @@
 	"type": "module",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/DualSubs/Universal.git"
+		"url": "https://github.com/LeoGray/Universal.git"
 	},
 	"directories": {
 		"example": "example"
@@ -39,7 +39,9 @@
 		"test": "node --test tests/*.test.mjs",
 		"clean": "node --input-type=module -e 'import { rm } from \"node:fs/promises\"; await rm(\"dist\", { recursive: true, force: true });'",
 		"build:scripts": "rollup -c",
-		"check:args": "tsc --noEmit --skipLibCheck --module nodenext --moduleResolution nodenext --target es2022 --allowImportingTsExtensions arguments-builder.*.config.ts"
+		"check:args": "tsc --noEmit --skipLibCheck --module nodenext --moduleResolution nodenext --target es2022 --allowImportingTsExtensions arguments-builder.*.config.ts",
+		"build:fork": "node scripts/build-fork.mjs",
+		"test:fork": "node --test tests/apple-chinese.test.mjs tests/fork-release.test.mjs"
 	},
 	"browserslist": [
 		"iOS >= 15"
@@ -65,5 +67,6 @@
 		"@nsnanocat/surge2egern": {
 			"puppeteer": "25.7.0"
 		}
-	}
+	},
+	"version": "1.8.1-leogray.1"
 }

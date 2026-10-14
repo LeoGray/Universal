@@ -1,0 +1,26 @@
+{
+  "baseURL": "https://github.com/DualSubs/Universal/releases/download/v1.8.1",
+  "sourceCommit": "e9ca750",
+  "assets": {
+    "Composite.Subtitles.response.bundle.js": "c42404fc4bff7dd10cb27ebfcf7d92c89f6584f5067ea37752d36750767c17df",
+    "DualSubs.API.Translate.PreferencePanes.json": "12c8b7f3b81142a0c4b67d4540caf9c835535ef68d0c5df46630a1bde95552b9",
+    "DualSubs.Composite.PreferencePanes.json": "260900955eba8d2e4493fd14f479a8e2a5d7976fc00d5688ddee8020ec2444c0",
+    "DualSubs.External.PreferencePanes.json": "4ab7a492e3b8f7b474102ea635d84ff2be9a6c28fc62916cbe9ec71d6224a319",
+    "DualSubs.Translate.PreferencePanes.json": "72dd406b2adf55aeb19a396876ec993d0690617cefb166dacc9799ef01493618",
+    "DualSubs.Universal.PreferencePanes.json": "a0d6c95f7b76c2a03c8eb215238bc99f91548fff758ae8b67efd9c352b59177c",
+    "DualSubs.Universal.plugin": "a242009e802876127633970522ee636b42706066e07ea6bf00b81576cfb38788",
+    "DualSubs.Universal.sgmodule": "25d9293d98298078528bc8c96330ff7b30af5b394644a878e6c34994bc0e5f8f",
+    "DualSubs.Universal.snippet": "14b252d642d40f7ed589de7b25e8d09e287a9f1bc23a2632c992014385b8fe63",
+    "DualSubs.Universal.srmodule": "c58d99edfec3a52c93f679b40f960f0598b8c5393a9078b9c4a1d0b9f1efa30c",
+    "DualSubs.Universal.stoverride": "e27c7cccbb6eb6a4e72fe85d147aa2c9fa2d162d7baec1dbd13837facaaa68fc",
+    "DualSubs.Universal.yaml": "4f199cc6115fbdf0b61dba5b9ac74e423655780ecc9e31147868462b6dd9d941",
+    "External.Lyrics.response.bundle.js": "c4e2e37db45eb02ce89f0de446601fe62990e7e018e5df279d25e11784b9b3d2",
+    "Manifest.response.bundle.js": "63a65a1ec7fb789df6fe5a04a06c9d3eba11583f7e741975949426786db0b70c",
+    "Translate.response.bundle.js": "a9d9efc80854641886073985827de269503849c4d6c5f9d02f4e7627097ed8da",
+    "config.API_Translate.bundle.js": "6b033ea913e7bc5e3076907c277451380684898894cb4f2b9466c953e0d78b34",
+    "config.Composite.bundle.js": "a19da2c23635319675ffc64b29f7ddf6d74ea5cf3de51c3543220581baa4fc4d",
+    "config.External.bundle.js": "a97101d66e62924e6eab1009352a45c390bdaaa406b25efdfdead54e0866bf2e",
+    "config.Translate.bundle.js": "f445dfe0afe6ade83547cfd03d92ebe42b299904c16de6763a7579d2e5a6434a",
+    "config.bundle.js": "ee55ec90fb034fbe8dc4cf86e61eb6bd62e48c411ae2a6e5515fced38c01958b"
+  }
+}

@@ -82,6 +82,16 @@ export default function setOption(playlist1 = {}, playlist2 = {}, type = "", pla
 	//newOption.OPTION.CHARACTERISTICS += `${separator ?? ""}DualSubs.${type}`;
 	// 增加副语言
 	newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE2;
+	// Mac AVKit can collapse a translated track that keeps the source rendition ID.
+	// Keep the on-device verified change scoped to Apple/Mac Chinese translation.
+	if (platform === "Apple" && device === "Macintosh" && type === "Translate" && /^(zh|cmn|zho|chi|yue)(-|$)/i.test(LANGUAGE2)) {
+		newOption.OPTION.LANGUAGE = /hant|tw|hk|yue/i.test(LANGUAGE2) ? "zh-Hant" : "zh-Hans";
+		newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE1;
+		if (newOption.OPTION["STABLE-RENDITION-ID"]) {
+			newOption.OPTION["STABLE-RENDITION-ID"] += "-dualsubs-translate";
+		}
+	}
+
 	// 修改链接
 	const symbol = newOption.OPTION.URI.includes("?") ? "&" : "?";
 	newOption.OPTION.URI += `${symbol}subtype=${type}`;

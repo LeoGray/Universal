@@ -100,7 +100,27 @@ export default class AttrList {
 			case "application/x-mpegurl":
 			case "application/vnd.apple.mpegurl":
 			case "audio/mpegurl": {
+				// Snapshot official tracks before inserting generated renditions.
+				// Forced-only Chinese is not a full subtitle track.
+				const preferChinese = this.platform === "Apple" && /^(zh|cmn|zho|chi|yue)(-|$)/i.test(languages[1] ?? "");
+				const chineseGroups = new Set(file.filter(item =>
+					item?.TAG === "#EXT-X-MEDIA" &&
+					["SUBTITLES", "CLOSED-CAPTIONS"].includes(item?.OPTION?.TYPE) &&
+					item.OPTION.FORCED !== "YES" &&
+					/^(zh|cmn|zho|chi|yue)(-|$)/i.test(item.OPTION.LANGUAGE ?? "") &&
+					!/[?&]subtype=/.test(item.OPTION.URI ?? "")
+				).map(item => item.OPTION["GROUP-ID"]));
+				// Embedded CC and external subtitles use separate groups; link them via variants.
+				for (const variant of file) {
+					if (variant?.TAG === "#EXT-X-STREAM-INF" && chineseGroups.has(variant.OPTION?.["CLOSED-CAPTIONS"]) && variant.OPTION?.SUBTITLES) {
+						chineseGroups.add(variant.OPTION.SUBTITLES);
+					}
+				}
+
 				playlists1?.forEach(playlist1 => {
+					// Preserve official Chinese without adding duplicate Chinese choices.
+					if (preferChinese && chineseGroups.has(playlist1.OPTION["GROUP-ID"])) return;
+
 					const index1 = file.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI); // 主语言（源语言）字幕位置
 					types.forEach(type => {
 						Console.debug(`type: ${type}`);
