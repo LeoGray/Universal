@@ -1,0 +1,38 @@
+name: Apple TV playback helper
+on:
+  push:
+    branches: [main, 'codex/**']
+    paths: ['apple-tv-playback/**', '.github/workflows/apple-tv-playback.yml']
+    tags: ['apple-tv-playback-v*']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --test apple-tv-playback/playback.test.mjs
+  release:
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/apple-tv-playback-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish independent candidate without changing Universal latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(sed -n 's/^#!version = //p' apple-tv-playback/AppleTV.Playback.sgmodule)
+          test "$GITHUB_REF_NAME" = "apple-tv-playback-v$version"
+          gh release create "$GITHUB_REF_NAME" \
+            apple-tv-playback/AppleTV.Playback.sgmodule \
+            apple-tv-playback/AppleTV.Playback.response.js \
+            --verify-tag --prerelease --latest=false \
+            --title "Apple TV playback helper $version (device validation pending)" \
+            --notes-file apple-tv-playback/README.md

@@ -4,7 +4,9 @@ Based on DualSubs Universal v1.8.1 (Apache-2.0). This is an independent fork, no
 
 **Install in Surge:** `https://github.com/LeoGray/Universal/releases/latest/download/DualSubs.Universal.sgmodule`
 
-Disable the original Universal module before enabling this fork. Keep iRingo TV and certificate setup. The same URL can be installed on Mac/iOS/tvOS; only Mac playback of the rendition fix has been verified. No local file paths are required.
+Disable the original Universal module before enabling this fork. Keep the certificate setup. The same URL can be installed on Mac/iOS/tvOS. No local file paths are required.
+
+For Apple TV playback URL compatibility, use the separate [playback-only helper](apple-tv-playback/README.md) **instead of iRingo TV** when affected by the homepage failure. The helper excludes iRingo's navigation and region rewrites. It is a test candidate awaiting device validation; the existing Universal stable release remains `v1.8.1-leogray.3`.
 
 Apple TV: preserve full official Simplified or Traditional Chinese subtitles. Add machine translation only to groups without official Chinese. Forced-only Chinese does not count as a full track. Select official Simplified Chinese first, or official Traditional Chinese if Simplified is absent; the fork does not change your player selection automatically. On Mac and tvOS, generated Chinese translation uses a distinct rendition ID and a Chinese language label. Other platforms retain upstream labeling.
 

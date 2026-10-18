@@ -1,0 +1,16 @@
+#!name = TV 播放兼容 · LeoGray
+#!desc = 仅处理 DualSubs 所需的播放地址兼容，不改首页导航、地区或账号。替代 iRingo TV，勿同时启用。
+#!author = LeoGray
+#!homepage = https://github.com/LeoGray/Universal/tree/codex/appletv-playback-only/apple-tv-playback
+#!category = LeoGray
+#!version = 1.0.0
+
+[URL Rewrite]
+^https?:\/\/play-cdn\.itunes\.apple\.com(?=(?::\d+)?(?:[/?#]|$)) https://play.itunes.apple.com header
+^https?:\/\/play-edge-cdn\.itunes\.apple\.com(?=(?::\d+)?(?:[/?#]|$)) https://play-edge.itunes.apple.com header
+
+[Script]
+LeoGray.AppleTV.Playback = type=http-response, pattern=^https:\/\/uts-api\.itunes\.apple\.com\/uts\/v3\/(?:canvases|shelves|movies|shows|episodes|sporting-events)(?:[/?]|$), requires-body=1, timeout=5, max-size=2097152, script-path=https://github.com/LeoGray/Universal/releases/download/apple-tv-playback-v1.0.0/AppleTV.Playback.response.js
+
+[MITM]
+hostname = %APPEND% uts-api.itunes.apple.com, play-cdn.itunes.apple.com, play-edge-cdn.itunes.apple.com
